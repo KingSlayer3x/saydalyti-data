@@ -1,34 +1,25 @@
-# saydalyti-data — بيانات الصيدليات المناوبة
+# saydalyti-data
 
-Public data repository for the صيدليتي (Saydalyti) app.
-This data is public information (duty schedules are posted publicly). No secrets live here.
+مستودع البيانات العام الذي يقرأه تطبيق صيدليتي. لا يحتوي على كود التطبيق ولا
+على صور أو أدوات استخراج؛ يحتوي فقط على JSON المطلوب للتشغيل.
 
-## Structure
+## البنية
 
-```
-cities.json                      # list of supported cities
-schedules/{cityId}/{YYYY-MM}.json  # one file per city per month
-```
-
-## Schedule file format
-
-```json
-{
-  "city": "dreikish",
-  "month": "2026-09",
-  "updatedAt": "2026-08-24T00:00:00Z",
-  "days": {
-    "01": [ { "nameAr": "...", "district": "...", "address": "...", "phone": "..." } ],
-    "02": [ ... ]
-  }
-}
+```text
+cities.json
+schedules/{cityId}/{YYYY-MM}.json
 ```
 
-- `days` keys are zero-padded day-of-month strings ("01" … "31").
-- A day may have multiple pharmacies on duty.
-- Updated monthly via the local `extract.ts` tool (Ollama vision extraction + human review).
+كل ملف شهر يحتوي أيام الشهر، ويمكن أن يحتوي اليوم على أكثر من صيدلية مناوبة.
 
-## Consumed by the app via
+## سير العمل الشهري
 
-- Primary: `https://raw.githubusercontent.com/{USER}/saydalyti-data/main/...`
-- Mirror:  `https://cdn.jsdelivr.net/gh/{USER}/saydalyti-data@main/...`
+تتم قراءة صورة الجدول بواسطة AI على الإنترنت، ثم تُراجع النتائج يدويًا. بعد
+التأكد من الأسماء والأرقام، يُحدّث ملف الشهر ويُرفع إلى فرع `main`. التطبيق
+يجلب التحديثات من GitHub مباشرة ولا يحتاج إلى إعادة بناء.
+
+لا تضع أي token أو كلمة مرور أو ملف صورة في هذا المستودع.
+
+## الرابط الذي يستخدمه التطبيق
+
+يستخدم التطبيق GitHub API كمسار أساسي، مع jsDelivr وGitHub Raw كمسارات احتياطية.
